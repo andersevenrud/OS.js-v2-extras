@@ -18,12 +18,15 @@
     <!-- TOOLBAR -->
     <gui-vbox-container data-grow="0" data-shrink="1" data-basis="auto">
       <gui-toolbar>
+                    
 
+        <gui-button data-id="First" data-icon="stock://16x16/actions/go-first.png"></gui-button>
         <gui-button data-id="Prev" data-icon="stock://16x16/actions/go-previous.png"></gui-button>
         <gui-button data-id="Next" data-icon="stock://16x16/actions/go-next.png"></gui-button>
+        <gui-button data-id="Last" data-icon="stock://16x16/actions/go-last.png"></gui-button>
         <gui-button data-id="Out" data-icon="stock://16x16/actions/zoom-out.png"></gui-button>
-        <gui-button data-id="In" data-icon="stock://16x16/actions/zoom-in.png"></gui-button>
-
+        <gui-button data-id="In" data-icon="stock://16x16/actions/zoom-in.png"></gui-button>   
+        <gui-button data-id="Print" data-icon="stock://16x16/actions/document-print.png"></gui-button>
       </gui-toolbar>
     </gui-vbox-container>
 
@@ -39,6 +42,7 @@
     </gui-vbox-container>
 
   </gui-vbox>
-
+  <iframe name="print_frame" width="0" height="0" frameborder="0" src="about:blank"></iframe>
+ 
 
 </application-window>

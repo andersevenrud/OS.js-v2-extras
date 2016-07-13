@@ -73,6 +73,15 @@
     scheme.find(this, 'Out').on('click', function() {
       self.zoomOut();
     });
+    scheme.find(this, 'Print').on('click', function() {
+      self.printDocument();
+    });
+    scheme.find(this, 'First').on('click', function() {
+      self.firstPage();
+    });
+    scheme.find(this, 'Last').on('click', function() {
+      self.lastPage();
+    });
 
     return root;
   };
@@ -107,6 +116,7 @@
       var context = canvas.getContext('2d');
       canvas.height = viewport.height;
       canvas.width = viewport.width;
+      canvas.setAttribute('id','canvas');
 
       container.appendChild(canvas);
 
@@ -136,6 +146,22 @@
       this.currentScale -= 0.5;
     }
     this.page(this.pageIndex);
+  };
+  
+  ApplicationPDFjsWindow.prototype.printDocument = function() {  
+    var canvas = document.getElementById("canvas");  
+    var img    = canvas.toDataURL("image/png");
+    window.frames["print_frame"].document.body.innerHTML= '<img src="'+img+'"/>';
+    window.frames["print_frame"].window.focus();
+    window.frames["print_frame"].window.print();
+  };
+  
+  ApplicationPDFjsWindow.prototype.firstPage = function() {
+    this.page(1);
+  };
+  
+  ApplicationPDFjsWindow.prototype.lastPage = function() {
+    this.page(this.pageCount);
   };
 
   ApplicationPDFjsWindow.prototype.showFile = function(file, result) {
