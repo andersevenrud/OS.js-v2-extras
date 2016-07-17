@@ -82,6 +82,9 @@
     scheme.find(this, 'Last').on('click', function() {
       self.lastPage();
     });
+    scheme.find(this, 'pageNumber').on('enter', function() {
+      self.changePage();
+    });
 
     return root;
   };
@@ -106,8 +109,10 @@
 
     this.pageIndex = pageNum;
 
-    var statustext = Utils.format('Page {0}/{1} - {2}%', this.pageIndex, this.pageCount, this.currentScale*100);
+    var statustext = Utils.format(' - {0}%', this.currentScale*100);
+    var pageNumber = Utils.format('{0}/{1}', this.pageIndex, this.pageCount);
     this._scheme.find(this, 'Statusbar').set('value', statustext);
+    this._scheme.find(this, 'pageNumber').set('value', pageNumber);
 
     this.pdf.getPage(this.pageIndex).then(function getPageHelloWorld(page) {
       var scale = self.currentScale;
@@ -162,6 +167,22 @@
   
   ApplicationPDFjsWindow.prototype.lastPage = function() {
     this.page(this.pageCount);
+  };
+  
+  ApplicationPDFjsWindow.prototype.changePage = function() {      
+    var pageNumber = Number(this._scheme.find(this, 'pageNumber').get('value'));
+    if ( Math.floor(pageNumber) == pageNumber && pageNumber > 0 ) {
+        if( pageNumber <= this.pageCount ) {
+            this.page(pageNumber);
+        } else {
+            API.createDialog('Alert', {
+            message: 'The page number \''+ pageNumber +'\' you inputted cannot be found in this document.'
+          }, null, this);
+        }
+    } else {        
+        var _pageNumber = Utils.format('{0}/{1}', this.pageIndex, this.pageCount);
+        this._scheme.find(this, 'pageNumber').set('value', _pageNumber);        
+    }
   };
 
   ApplicationPDFjsWindow.prototype.showFile = function(file, result) {
