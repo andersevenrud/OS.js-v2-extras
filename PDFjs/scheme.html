@@ -1,4 +1,4 @@
-<application-window data-id="PDFWindow">
+<application-window data-id="PDFWindow" >
 
   <gui-vbox>
     <!-- MENU BAR -->
@@ -27,12 +27,16 @@
         <gui-button data-id="Out" data-icon="stock://16x16/actions/zoom-out.png"></gui-button>
         <gui-button data-id="In" data-icon="stock://16x16/actions/zoom-in.png"></gui-button>   
         <gui-button data-id="Print" data-icon="stock://16x16/actions/document-print.png"></gui-button>
+        <gui-button data-id="Fullscreen" data-icon="stock://16x16/actions/gtk-fullscreen.png"></gui-button>
+
+
       </gui-toolbar>
     </gui-vbox-container>
 
     <!-- CONTENT -->
     <gui-vbox-container data-grow="1" data-shrink="0" data-basis="auto" data-fill="true">
       <gui-container data-id="Content">
+        <canvas id="canvas"></canvas>
       </gui-container>
     </gui-vbox-container>
 

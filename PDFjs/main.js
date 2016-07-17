@@ -85,6 +85,9 @@
     scheme.find(this, 'pageNumber').on('enter', function() {
       self.changePage();
     });
+    scheme.find(this, 'Fullscreen').on('click', function() {
+      self.fullScreenMode();
+    });
 
     return root;
   };
@@ -105,7 +108,7 @@
     }
 
     var container = this._scheme.find(this, 'Content').$element;
-    Utils.$empty(container);
+    //Utils.$empty(container);
 
     this.pageIndex = pageNum;
 
@@ -117,13 +120,14 @@
     this.pdf.getPage(this.pageIndex).then(function getPageHelloWorld(page) {
       var scale = self.currentScale;
       var viewport = page.getViewport(scale);
-      var canvas = document.createElement('canvas');
+      var canvas = document.getElementById('canvas');
       var context = canvas.getContext('2d');
       canvas.height = viewport.height;
       canvas.width = viewport.width;
-      canvas.setAttribute('id','canvas');
-
-      container.appendChild(canvas);
+      context.clearRect(0, 0, viewport.width, viewport.height);
+      canvas.addEventListener('wheel', function(){
+        self.pageScroll();
+      })
 
       var renderContext = {
         canvasContext: context,
@@ -177,7 +181,9 @@
         } else {
             API.createDialog('Alert', {
             message: 'The page number \''+ pageNumber +'\' you inputted cannot be found in this document.'
-          }, null, this);
+            }, null, this);
+            var _pageNumber = Utils.format('{0}/{1}', this.pageIndex, this.pageCount);
+            this._scheme.find(this, 'pageNumber').set('value', _pageNumber);     
         }
     } else {        
         var _pageNumber = Utils.format('{0}/{1}', this.pageIndex, this.pageCount);
@@ -185,11 +191,23 @@
     }
   };
 
+  ApplicationPDFjsWindow.prototype.fullScreenMode = function() {
+    var content = document.getElementById("canvas"); 
+    screenfull.request(content);
+  };
+
+  ApplicationPDFjsWindow.prototype.pageScroll = function() {
+    var evt = window.event || e;
+    var delta = evt.detail ? evt.detail*(-120) : evt.wheelDelta;
+    if ( delta > 0 ) this.prevPage() ;
+    else  this.nextPage() ;
+  };
+
   ApplicationPDFjsWindow.prototype.showFile = function(file, result) {
     var self = this;
     var container = this._scheme.find(this, 'Content').$element;
 
-    Utils.$empty(container);
+    //Utils.$empty(container);
 
     this.pageCount = 0;
     this.pageIndex = 0;
