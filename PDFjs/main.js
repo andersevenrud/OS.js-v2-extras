@@ -57,6 +57,7 @@
   ApplicationPDFjsWindow.prototype.init = function(wmRef, app, scheme) {
     var root = DefaultApplicationWindow.prototype.init.apply(this, arguments);
     var self = this;
+    
 
     // Load and set up scheme (GUI) here
     scheme.render(this, 'PDFWindow', root);
@@ -87,6 +88,9 @@
     });
     scheme.find(this, 'Fullscreen').on('click', function() {
       self.fullScreenMode();
+    });
+    document.getElementById('canvas').addEventListener('wheel', function(){
+        self.pageScroll();
     });
 
     return root;
@@ -125,9 +129,6 @@
       canvas.height = viewport.height;
       canvas.width = viewport.width;
       context.clearRect(0, 0, viewport.width, viewport.height);
-      canvas.addEventListener('wheel', function(){
-        self.pageScroll();
-      })
 
       var renderContext = {
         canvasContext: context,
@@ -197,10 +198,17 @@
   };
 
   ApplicationPDFjsWindow.prototype.pageScroll = function() {
-    var evt = window.event || e;
-    var delta = evt.detail ? evt.detail*(-120) : evt.wheelDelta;
-    if ( delta > 0 ) this.prevPage() ;
-    else  this.nextPage() ;
+    var delta = 0;
+    if (!event) 
+            event = window.event;
+    if (event.wheelDelta) { 
+            delta = event.wheelDelta/120;
+    } else if (event.detail) { 
+            delta = -event.detail/3;
+    }
+    console.log(delta);
+    if ( delta > 0 ) this.page(this.pageIndex-1); 
+    else  this.page(this.pageIndex+1);
   };
 
   ApplicationPDFjsWindow.prototype.showFile = function(file, result) {
